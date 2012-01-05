@@ -44,7 +44,7 @@ fun <SID>SelectIndentedBlocks(blocks)
   endw
   let end -= 1
 
-  exe "normal ".start."ggV".end."gg"
+  exe "normal! \<esc>".start."ggV".end."gg"
 endf
 
 comm -count=1 SelectIndentedBlocks call <SID>SelectIndentedBlocks(<count>)
