@@ -9,7 +9,7 @@ let g:loaded_indented_block = 1
 
 fun <SID>SelectIndentedBlocks(blocks)
   let blocks = a:blocks > 0? a:blocks : 1
-  let start  = line('.')
+  let start  = line('v')
   let end    = line('.')
   let indent = indent(start)
 
@@ -27,7 +27,7 @@ fun <SID>SelectIndentedBlocks(blocks)
     let cur_indent = indent(start)
     if cur_indent < indent
       let blocks -= 1
-      if blocks == 0
+      if blocks <= 0
         let start += 1
         break
       endif
@@ -50,3 +50,4 @@ endf
 comm -count=1 SelectIndentedBlocks call <SID>SelectIndentedBlocks(<count>)
 map <Plug>SelectIndentedBlocks :<c-u>exe "SelectIndentedBlocks" v:count1<cr>
 omap ai <Plug>SelectIndentedBlocks
+vmap ai <Plug>SelectIndentedBlocks
