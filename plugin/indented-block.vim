@@ -20,6 +20,10 @@ fun <SID>SelectIndentedBlocks(blocks)
       break
     endif
 
+    if getline(start) == ''
+      continue
+    endif
+
     let cur_indent = indent(start)
     if cur_indent < indent
       let blocks -= 1
@@ -31,7 +35,7 @@ fun <SID>SelectIndentedBlocks(blocks)
     endif
   endw
 
-  while indent(end) >= indent
+  while indent(end) >= indent || getline(end) == ''
     let end += 1
 
     if end > line('$')
