@@ -7,11 +7,15 @@ if exists('g:loaded_indented_block')
 endif
 let g:loaded_indented_block = 1
 
-fun <SID>SelectIndentedBlocks(blocks)
+fun <SID>SelectIndentedBlocks(blocks, ...)
   let blocks = a:blocks > 0? a:blocks : 1
-  let start  = line('v')
-  let end    = line('.')
+  let start  = a:0 > 0? a:1 : line('v')
+  let end    = a:0 > 0? a:2 : line('.')
   let indent = indent(start)
+
+  if start != end
+    let blocks += 1
+  endif
 
   while 1
     let start -= 1
@@ -44,10 +48,17 @@ fun <SID>SelectIndentedBlocks(blocks)
   endw
   let end -= 1
 
-  exe "normal! \<esc>".start."ggV".end."gg"
+  if start == line('v') && end == line('.')
+    call <SID>SelectIndentedBlocks(a:blocks + 1)
+  else
+    exe "normal! \<esc>".start."ggV".end."gg"
+  endif
 endf
 
-comm -count=1 SelectIndentedBlocks call <SID>SelectIndentedBlocks(<count>)
+comm -count=1 -nargs=* SelectIndentedBlocks
+      \ call <SID>SelectIndentedBlocks(<count>, <f-args>)
 map <Plug>SelectIndentedBlocks :<c-u>exe "SelectIndentedBlocks" v:count1<cr>
+map <Plug>VSelectIndentedBlocks
+      \ :<c-u>exe "SelectIndentedBlocks" v:count1 line("'<") line("'>")<cr>
 omap ai <Plug>SelectIndentedBlocks
-vmap ai <Plug>SelectIndentedBlocks
+vmap ai <Plug>VSelectIndentedBlocks
