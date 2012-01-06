@@ -7,6 +7,13 @@ if exists('g:loaded_indented_block')
 endif
 let g:loaded_indented_block = 1
 
+if !exists('g:indented_blocks_ignore_header')
+  let g:indented_blocks_ignore_header = []
+endif
+if !exists('g:indented_blocks_use_footer')
+  let g:indented_blocks_use_footer = []
+endif
+
 fun <SID>SelectIndentedBlocks(blocks, ...)
   let blocks = a:blocks > 0? a:blocks : 1
   let start  = a:0 > 0? a:1 : line('v')
@@ -32,7 +39,9 @@ fun <SID>SelectIndentedBlocks(blocks, ...)
     if cur_indent < indent
       let blocks -= 1
       if blocks <= 0
-        let start += 1
+        if index(g:indented_blocks_ignore_header, &l:filetype) >= 0
+          let start += 1
+        endif
         break
       endif
       let indent = cur_indent
@@ -46,7 +55,9 @@ fun <SID>SelectIndentedBlocks(blocks, ...)
       break
     endif
   endw
-  let end -= 1
+  if index(g:indented_blocks_use_footer, &l:filetype) < 0
+    let end -= 1
+  endif
 
   if start == line('v') && end == line('.')
     call <SID>SelectIndentedBlocks(a:blocks + 1)
