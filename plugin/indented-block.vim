@@ -60,7 +60,11 @@ fun <SID>SelectIndentedBlocks(blocks, ...)
   endif
 
   if start == line('v') && end == line('.')
-    call <SID>SelectIndentedBlocks(a:blocks + 1)
+    if a:0 > 0
+      call <SID>SelectIndentedBlocks(a:blocks + 1, a:1, a:2)
+    else
+      call <SID>SelectIndentedBlocks(a:blocks + 1)
+    endif
   else
     exe "normal! \<esc>".start."ggV".end."gg"
   endif
