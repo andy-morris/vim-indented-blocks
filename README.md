@@ -1,7 +1,7 @@
 # indented-block
 ## Select a block by indentation in Vim
 
-As would be useful in Python and Haskell.
+![](screenshot/comp.png)
 
 This plugin adds a new text object `i`, for a block defined by consistent
 indentation. The motion `ii` only selects the insides of the block, which `ai`
